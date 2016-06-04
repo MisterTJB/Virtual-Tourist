@@ -15,6 +15,10 @@
 		227A04C01D0148C9009D6501 /* TravelLocationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227A04BF1D0148C9009D6501 /* TravelLocationsViewController.swift */; };
 		227A04C21D01490E009D6501 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 227A04C11D01490E009D6501 /* MapKit.framework */; };
 		227A04C51D014EAC009D6501 /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227A04C41D014EAC009D6501 /* PhotoAlbumViewController.swift */; };
+		22DC263E1D02B28900BF3652 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DC263A1D02B28900BF3652 /* Photo+CoreDataProperties.swift */; };
+		22DC263F1D02B28900BF3652 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DC263B1D02B28900BF3652 /* Photo.swift */; };
+		22DC26401D02B28900BF3652 /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DC263C1D02B28900BF3652 /* Pin+CoreDataProperties.swift */; };
+		22DC26411D02B28900BF3652 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DC263D1D02B28900BF3652 /* Pin.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +32,10 @@
 		227A04BF1D0148C9009D6501 /* TravelLocationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TravelLocationsViewController.swift; sourceTree = "<group>"; };
 		227A04C11D01490E009D6501 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		227A04C41D014EAC009D6501 /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
+		22DC263A1D02B28900BF3652 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		22DC263B1D02B28900BF3652 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
+		22DC263C1D02B28900BF3652 /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		22DC263D1D02B28900BF3652 /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +70,7 @@
 		227A04A91D013ADF009D6501 /* Virtual Tourist */ = {
 			isa = PBXGroup;
 			children = (
+				22DC26391D02B25600BF3652 /* Model */,
 				227A04C31D014E79009D6501 /* Controllers */,
 				227A04AA1D013ADF009D6501 /* AppDelegate.swift */,
 				227A04AE1D013ADF009D6501 /* Main.storyboard */,
@@ -80,6 +89,17 @@
 				227A04C41D014EAC009D6501 /* PhotoAlbumViewController.swift */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		22DC26391D02B25600BF3652 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				22DC263A1D02B28900BF3652 /* Photo+CoreDataProperties.swift */,
+				22DC263B1D02B28900BF3652 /* Photo.swift */,
+				22DC263C1D02B28900BF3652 /* Pin+CoreDataProperties.swift */,
+				22DC263D1D02B28900BF3652 /* Pin.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -154,9 +174,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22DC263F1D02B28900BF3652 /* Photo.swift in Sources */,
 				227A04B31D013ADF009D6501 /* Virtual_Tourist.xcdatamodeld in Sources */,
 				227A04AB1D013ADF009D6501 /* AppDelegate.swift in Sources */,
+				22DC26411D02B28900BF3652 /* Pin.swift in Sources */,
+				22DC26401D02B28900BF3652 /* Pin+CoreDataProperties.swift in Sources */,
 				227A04C01D0148C9009D6501 /* TravelLocationsViewController.swift in Sources */,
+				22DC263E1D02B28900BF3652 /* Photo+CoreDataProperties.swift in Sources */,
 				227A04C51D014EAC009D6501 /* PhotoAlbumViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -307,6 +331,7 @@
 				227A04BE1D013ADF009D6501 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
