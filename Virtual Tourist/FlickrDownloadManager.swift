@@ -13,7 +13,7 @@ import Alamofire
 
 class FlickrDownloadManager {
     
-    static func downloadImagesForRegion(completion: () -> Void){
+    static func downloadImagesForRegion(completion: ([Int]?, NSError?) -> Void){
         let url = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=a4ebce9cbae74391014b23471293fb42&lat=41.292167695422506&lon=174.77189273921775&format=json&nojsoncallback=1"
         
         Alamofire.request(
@@ -30,28 +30,34 @@ class FlickrDownloadManager {
             .responseJSON { (response) -> Void in
                 guard response.result.isSuccess else {
                     print("Error while fetching photos: \(response.result.error)")
-                    completion()
+                    completion(nil, NSError(domain: "Initial Flickr request was unsuccessful", code: 0, userInfo: nil))
                     return
                 }
                 
-                guard let value = response.result.value as? [String: AnyObject],
-                    photoResults = value["photo"] as? [[String: AnyObject]] else {
-                        print("Malformed data")
-                        completion()
+                guard let result = response.result.value as? [String: AnyObject],
+                    photos = result["photos"] as? [String: AnyObject],
+                    photo = photos["photo"] as? [[String: AnyObject]] else {
+                        completion(nil, NSError(domain: "Initial Flickr request response was malformed", code: 0, userInfo: nil))
                         return
                 }
                 
-                var photos = [Photo]()
-                for photo in photoResults {
-                    print(photo)
+                var imageIdentifiers = [Int]()
+                for photoData in photo {
+                    guard let identifier = photoData["id"] else {
+                        completion(nil, NSError(domain: "Tried to access photo with no identifier", code: 0, userInfo: nil))
+                        return
+                    }
+                    
+                    guard let identifierInteger = identifier.integerValue else {
+                        completion(nil, NSError(domain: "Couldn't convert identifier to integer", code: 0, userInfo: nil))
+                        return
+                    }
+                
+                    imageIdentifiers.append(identifierInteger)
                 }
                 
-                completion()
+                completion(imageIdentifiers, nil)
         }
-    
-    }
-    
-    private static func buildUrl(){
     
     }
 

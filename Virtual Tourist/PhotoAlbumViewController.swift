@@ -11,4 +11,15 @@ import MapKit
 
 class PhotoAlbumViewController : UIViewController {
     
+    override func viewDidLoad() {
+        FlickrDownloadManager.downloadImagesForRegion { data, error in
+            
+            if let error = error {
+                print (error.domain)
+            } else {
+                print(data)
+            }
+        }
+    }
+    
 }
