@@ -43,14 +43,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         return fetchedResultsController
     }()
     
-    
-    // TODO Create photos using identifiers and managed object context
-    // i.e. call some function in FlickrDownloadManager, let the callback
-    // create a new Photo(id, imageData), then set its Pin to the current 
-    // Pin.
-    // Also, when that pin is created, display it in the collection view 
-    // somehow
-    
     override func viewDidLoad() {
         
         collectionView.delegate = self
