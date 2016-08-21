@@ -8,10 +8,21 @@
 
 import Foundation
 import CoreData
+import MapKit
 
 
 class Pin: NSManagedObject {
 
-// Insert code here to add functionality to your managed object subclass
-
+    convenience init(coordinate coord : CLLocationCoordinate2D,  context : NSManagedObjectContext){
+        
+        if let ent = NSEntityDescription.entityForName("Pin",
+                                                       inManagedObjectContext: context){
+            self.init(entity: ent, insertIntoManagedObjectContext: context)
+            self.latitude = coord.latitude
+            self.longitude = coord.longitude
+        } else{
+            fatalError("Unable to find Entity name!")
+        }
+        
+    }
 }

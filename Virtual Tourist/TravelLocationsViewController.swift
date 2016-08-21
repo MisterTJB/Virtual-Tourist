@@ -8,13 +8,27 @@
 
 import UIKit
 import MapKit
+import CoreData
 
 class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     
+    lazy var sharedContext: NSManagedObjectContext = {
+        // Get the stack
+        let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let stack = delegate.stack
+        return stack.context
+    }()
+    
+    lazy var stack: CoreDataStack = {
+        let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return delegate.stack
+    }()
+    
     override func viewDidLoad() {
-        mapView.delegate = self;
+        mapView.delegate = self
+        loadPersistedPins()
     }
     
     
@@ -25,9 +39,10 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
     @IBAction func pressedOnMap(sender: UILongPressGestureRecognizer) {
         
         if (sender.state == UIGestureRecognizerState.Ended){
-            let touchCoordinate = sender.locationInView(self.mapView);
-            let mapCoordinate = mapView.convertPoint(touchCoordinate, toCoordinateFromView: self.mapView);
-            addPinToMapAtCoordinate(coordinate: mapCoordinate);
+            let touchCoordinate = sender.locationInView(self.mapView)
+            let mapCoordinate = mapView.convertPoint(touchCoordinate, toCoordinateFromView: self.mapView)
+            persistNewPinAtCoordinate(coordinate: mapCoordinate);
+            addPinToMapAtCoordinate(coordinate: mapCoordinate)
             
         }
     }
@@ -41,11 +56,41 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
      
      */
     func addPinToMapAtCoordinate(coordinate coord : CLLocationCoordinate2D){
-        let pin = MKPointAnnotation();
-        pin.coordinate = coord;
-        mapView.addAnnotation(pin);
+        let pin = MKPointAnnotation()
+        pin.coordinate = coord
+        mapView.addAnnotation(pin)
+        
     }
     
+    /**
+     Create a new Pin managed object and save it in CoreData
+     
+     - Parameters:
+        - coordinate: The geographic coordinate for the new Pin
+     */
+    func persistNewPinAtCoordinate(coordinate coord: CLLocationCoordinate2D){
+        Pin(coordinate: coord, context: sharedContext)
+        stack.save()
+    }
+    
+    
+    /**
+     Load any persisted pins from CoreData and display them on the map
+     */
+    func loadPersistedPins(){
+        print("Loading persisted pins")
+        let fetch = NSFetchRequest(entityName: "Pin")
+        
+        do {
+            let pins = try sharedContext.executeFetchRequest(fetch) as! [Pin]
+            for pin in pins {
+                let coordinate = CLLocationCoordinate2D(latitude: Double(pin.latitude!), longitude: Double(pin.longitude!))
+                addPinToMapAtCoordinate(coordinate: coordinate)
+            }
+        } catch {
+            print ("Couldn't load Pins from sharedContext")
+        }
+    }
     
 
 }
