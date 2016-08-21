@@ -16,11 +16,87 @@
 		227A04C21D01490E009D6501 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 227A04C11D01490E009D6501 /* MapKit.framework */; };
 		227A04C51D014EAC009D6501 /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227A04C41D014EAC009D6501 /* PhotoAlbumViewController.swift */; };
 		22BE08061D693E1500B255A9 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE08051D693E1500B255A9 /* CoreDataStack.swift */; };
+		22BE08081D6953BC00B255A9 /* FlickrDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE08071D6953BC00B255A9 /* FlickrDownloadManager.swift */; };
+		22BE08221D6954DB00B255A9 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22BE08151D69542000B255A9 /* Alamofire.framework */; };
+		22BE08231D6954DB00B255A9 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22BE08151D69542000B255A9 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		22DC263E1D02B28900BF3652 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DC263A1D02B28900BF3652 /* Photo+CoreDataProperties.swift */; };
 		22DC263F1D02B28900BF3652 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DC263B1D02B28900BF3652 /* Photo.swift */; };
 		22DC26401D02B28900BF3652 /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DC263C1D02B28900BF3652 /* Pin+CoreDataProperties.swift */; };
 		22DC26411D02B28900BF3652 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DC263D1D02B28900BF3652 /* Pin.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		22BE08141D69542000B255A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22BE08091D69542000B255A9 /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F8111E3319A95C8B0040E7D1;
+			remoteInfo = "Alamofire iOS";
+		};
+		22BE08161D69542000B255A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22BE08091D69542000B255A9 /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F8111E3E19A95C8B0040E7D1;
+			remoteInfo = "Alamofire iOS Tests";
+		};
+		22BE08181D69542000B255A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22BE08091D69542000B255A9 /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4DD67C0B1A5C55C900ED2280;
+			remoteInfo = "Alamofire OSX";
+		};
+		22BE081A1D69542000B255A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22BE08091D69542000B255A9 /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F829C6B21A7A94F100A2CD59;
+			remoteInfo = "Alamofire OSX Tests";
+		};
+		22BE081C1D69542000B255A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22BE08091D69542000B255A9 /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4CF626EF1BA7CB3E0011A099;
+			remoteInfo = "Alamofire tvOS";
+		};
+		22BE081E1D69542000B255A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22BE08091D69542000B255A9 /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4CF626F81BA7CB3E0011A099;
+			remoteInfo = "Alamofire tvOS Tests";
+		};
+		22BE08201D69542000B255A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22BE08091D69542000B255A9 /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E4202FE01B667AA100C997FB;
+			remoteInfo = "Alamofire watchOS";
+		};
+		22BE08241D6954DB00B255A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22BE08091D69542000B255A9 /* Alamofire.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F8111E3219A95C8B0040E7D1;
+			remoteInfo = "Alamofire iOS";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		22BE08261D6954DB00B255A9 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				22BE08231D6954DB00B255A9 /* Alamofire.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		227A04A71D013ADF009D6501 /* Virtual Tourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Virtual Tourist.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -34,6 +110,9 @@
 		227A04C11D01490E009D6501 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		227A04C41D014EAC009D6501 /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
 		22BE08051D693E1500B255A9 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		22BE08071D6953BC00B255A9 /* FlickrDownloadManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrDownloadManager.swift; sourceTree = "<group>"; };
+		22BE08091D69542000B255A9 /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = Alamofire/Alamofire.xcodeproj; sourceTree = "<group>"; };
+		22BE08271D6960BD00B255A9 /* Virtual_Tourist_2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Virtual_Tourist_2.xcdatamodel; sourceTree = "<group>"; };
 		22DC263A1D02B28900BF3652 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		22DC263B1D02B28900BF3652 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		22DC263C1D02B28900BF3652 /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -46,6 +125,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				227A04C21D01490E009D6501 /* MapKit.framework in Frameworks */,
+				22BE08221D6954DB00B255A9 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,6 +135,7 @@
 		227A049E1D013ADF009D6501 = {
 			isa = PBXGroup;
 			children = (
+				22BE08091D69542000B255A9 /* Alamofire.xcodeproj */,
 				227A04C11D01490E009D6501 /* MapKit.framework */,
 				227A04A91D013ADF009D6501 /* Virtual Tourist */,
 				227A04A81D013ADF009D6501 /* Products */,
@@ -90,8 +171,23 @@
 			children = (
 				227A04BF1D0148C9009D6501 /* TravelLocationsViewController.swift */,
 				227A04C41D014EAC009D6501 /* PhotoAlbumViewController.swift */,
+				22BE08071D6953BC00B255A9 /* FlickrDownloadManager.swift */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		22BE080A1D69542000B255A9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				22BE08151D69542000B255A9 /* Alamofire.framework */,
+				22BE08171D69542000B255A9 /* Alamofire iOS Tests.xctest */,
+				22BE08191D69542000B255A9 /* Alamofire.framework */,
+				22BE081B1D69542000B255A9 /* Alamofire OSX Tests.xctest */,
+				22BE081D1D69542000B255A9 /* Alamofire.framework */,
+				22BE081F1D69542000B255A9 /* Alamofire tvOS Tests.xctest */,
+				22BE08211D69542000B255A9 /* Alamofire.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		22DC26391D02B25600BF3652 /* Model */ = {
@@ -115,10 +211,12 @@
 				227A04A31D013ADF009D6501 /* Sources */,
 				227A04A41D013ADF009D6501 /* Frameworks */,
 				227A04A51D013ADF009D6501 /* Resources */,
+				22BE08261D6954DB00B255A9 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				22BE08251D6954DB00B255A9 /* PBXTargetDependency */,
 			);
 			name = "Virtual Tourist";
 			productName = "Virtual Tourist";
@@ -152,12 +250,70 @@
 			mainGroup = 227A049E1D013ADF009D6501;
 			productRefGroup = 227A04A81D013ADF009D6501 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 22BE080A1D69542000B255A9 /* Products */;
+					ProjectRef = 22BE08091D69542000B255A9 /* Alamofire.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				227A04A61D013ADF009D6501 /* Virtual Tourist */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		22BE08151D69542000B255A9 /* Alamofire.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Alamofire.framework;
+			remoteRef = 22BE08141D69542000B255A9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		22BE08171D69542000B255A9 /* Alamofire iOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Alamofire iOS Tests.xctest";
+			remoteRef = 22BE08161D69542000B255A9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		22BE08191D69542000B255A9 /* Alamofire.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Alamofire.framework;
+			remoteRef = 22BE08181D69542000B255A9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		22BE081B1D69542000B255A9 /* Alamofire OSX Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Alamofire OSX Tests.xctest";
+			remoteRef = 22BE081A1D69542000B255A9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		22BE081D1D69542000B255A9 /* Alamofire.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Alamofire.framework;
+			remoteRef = 22BE081C1D69542000B255A9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		22BE081F1D69542000B255A9 /* Alamofire tvOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Alamofire tvOS Tests.xctest";
+			remoteRef = 22BE081E1D69542000B255A9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		22BE08211D69542000B255A9 /* Alamofire.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Alamofire.framework;
+			remoteRef = 22BE08201D69542000B255A9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		227A04A51D013ADF009D6501 /* Resources */ = {
@@ -185,11 +341,20 @@
 				22DC26401D02B28900BF3652 /* Pin+CoreDataProperties.swift in Sources */,
 				227A04C01D0148C9009D6501 /* TravelLocationsViewController.swift in Sources */,
 				22DC263E1D02B28900BF3652 /* Photo+CoreDataProperties.swift in Sources */,
+				22BE08081D6953BC00B255A9 /* FlickrDownloadManager.swift in Sources */,
 				227A04C51D014EAC009D6501 /* PhotoAlbumViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		22BE08251D6954DB00B255A9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Alamofire iOS";
+			targetProxy = 22BE08241D6954DB00B255A9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		227A04AE1D013ADF009D6501 /* Main.storyboard */ = {
@@ -298,7 +463,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = "Virtual Tourist/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "mistertjb.Virtual-Tourist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -309,7 +476,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = "Virtual Tourist/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "mistertjb.Virtual-Tourist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -343,9 +512,10 @@
 		227A04B11D013ADF009D6501 /* Virtual_Tourist.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				22BE08271D6960BD00B255A9 /* Virtual_Tourist_2.xcdatamodel */,
 				227A04B21D013ADF009D6501 /* Virtual_Tourist.xcdatamodel */,
 			);
-			currentVersion = 227A04B21D013ADF009D6501 /* Virtual_Tourist.xcdatamodel */;
+			currentVersion = 22BE08271D6960BD00B255A9 /* Virtual_Tourist_2.xcdatamodel */;
 			path = Virtual_Tourist.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
