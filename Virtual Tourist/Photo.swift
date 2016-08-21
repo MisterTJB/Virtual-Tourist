@@ -8,10 +8,26 @@
 
 import Foundation
 import CoreData
-
+import UIKit
 
 class Photo: NSManagedObject {
-
-// Insert code here to add functionality to your managed object subclass
+    
+    convenience init(pin : Pin, context : NSManagedObjectContext){
+        
+        if let ent = NSEntityDescription.entityForName("Photo",
+                                                       inManagedObjectContext: context){
+            self.init(entity: ent, insertIntoManagedObjectContext: context)
+            self.photoToPin = pin
+            self.identifier = "JUNK"
+            if let img = UIImage(named: "TEST_IMG.jpg") {
+                self.imageData = UIImageJPEGRepresentation(img, 1.0)
+            }
+            
+            
+        } else{
+            fatalError("Unable to find Entity name!")
+        }
+        
+    }
 
 }

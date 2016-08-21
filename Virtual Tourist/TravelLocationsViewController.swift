@@ -69,7 +69,10 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
         - coordinate: The geographic coordinate for the new Pin
      */
     func persistNewPinAtCoordinate(coordinate coord: CLLocationCoordinate2D){
-        Pin(coordinate: coord, context: sharedContext)
+        let pin = Pin(coordinate: coord, context: sharedContext)
+        for _ in 1...10 {
+            Photo(pin: pin, context: sharedContext)
+        }
         stack.save()
         print ("Saved pin with coordinate \(coord)")
     }
