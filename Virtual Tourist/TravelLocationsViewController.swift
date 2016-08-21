@@ -92,5 +92,15 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
         }
     }
     
+    
+    
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let photoAlbumViewController = storyboard.instantiateViewControllerWithIdentifier("PhotoAlbumView") as! PhotoAlbumViewController
+        presentViewController(photoAlbumViewController, animated: true, completion: nil)
+        
+    }
+    
+    
 
 }

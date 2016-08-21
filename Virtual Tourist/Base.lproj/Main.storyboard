@@ -67,7 +67,7 @@
         <!--Photo Album View Controller-->
         <scene sceneID="FVm-fS-uze">
             <objects>
-                <viewController id="AcL-u7-gQ7" customClass="PhotoAlbumViewController" customModule="Virtual_Tourist" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PhotoAlbumView" id="AcL-u7-gQ7" customClass="PhotoAlbumViewController" customModule="Virtual_Tourist" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="PaW-dH-QnD"/>
                         <viewControllerLayoutGuide type="bottom" id="DpP-ub-BIm"/>
