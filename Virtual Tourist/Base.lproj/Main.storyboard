@@ -89,7 +89,11 @@
                                 <rect key="frame" x="0.0" y="556" width="600" height="44"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="UoC-7F-34e"/>
-                                    <barButtonItem title="New Collection" id="V7K-RC-jgQ"/>
+                                    <barButtonItem title="New Collection" id="V7K-RC-jgQ">
+                                        <connections>
+                                            <action selector="newCollection:" destination="AcL-u7-gQ7" id="7f9-hv-IAa"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="0wK-57-4Xz"/>
                                 </items>
                             </toolbar>
@@ -133,6 +137,9 @@
                             <constraint firstItem="JUi-s2-6nl" firstAttribute="trailing" secondItem="CFk-lT-574" secondAttribute="trailing" id="tzz-AN-zI6"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="collectionView" destination="alT-l2-vI5" id="c3p-XG-Seq"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uQb-7P-8W5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
