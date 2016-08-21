@@ -8,23 +8,35 @@
 
 import Foundation
 import Alamofire
+import UIKit
+import MapKit
 
 
 
 class FlickrDownloadManager {
     
-    static func downloadImagesForRegion(completion: ([Int]?, NSError?) -> Void){
-        let url = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=a4ebce9cbae74391014b23471293fb42&lat=41.292167695422506&lon=174.77189273921775&format=json&nojsoncallback=1"
+    
+    /**
+     Download images from Flickr containing data about images in the region of a given coordinate
+     
+     - Parameters:
+        - coordinate: The coordinate about which to search for images
+        - completion: The completion handler to call, returning an image (represented as NSData) or 
+     an error to the caller
+     
+     */
+    static func downloadImagesForCoordinate(coordinate : CLLocationCoordinate2D, completion: (NSData?, NSError?) -> Void){
         
         Alamofire.request(
             .GET,
             "https://api.flickr.com/services/rest/",
             parameters: ["method": "flickr.photos.search",
             "api_key": "a4ebce9cbae74391014b23471293fb42",
-            "lat": "41.292167695422506",
-            "lon": "174.77189273921775",
+            "lat": coordinate.latitude,
+            "lon": coordinate.longitude,
             "format": "json",
-            "nojsoncallback": "1"],
+            "nojsoncallback": "1",
+            "extras": "url_m"],
             encoding: .URL)
             .validate()
             .responseJSON { (response) -> Void in
@@ -41,82 +53,54 @@ class FlickrDownloadManager {
                         return
                 }
                 
-                var imageIdentifiers = [Int]()
+                print ("Search results returned, about to download images")
                 for photoData in photo {
-                    guard let identifier = photoData["id"] else {
-                        completion(nil, NSError(domain: "Tried to access photo with no identifier", code: 0, userInfo: nil))
-                        return
-                    }
-                    
-                    guard let identifierInteger = identifier.integerValue else {
-                        completion(nil, NSError(domain: "Couldn't convert identifier to integer", code: 0, userInfo: nil))
-                        return
-                    }
                 
-                    imageIdentifiers.append(identifierInteger)
+                    downloadImageWithFlickrParameters(photoData){ imageData, error in
+                        
+                        guard let data = imageData else {
+                            completion(nil, error)
+                            return
+                        }
+                        completion(data, nil)
+                    
+                    }
                 }
                 
-                completion(imageIdentifiers, nil)
+                
         }
     
     }
-
-
-}
-
-struct Constants {
     
-    // MARK: Flickr
-    struct Flickr {
-        static let APIScheme = "https"
-        static let APIHost = "api.flickr.com"
-        static let APIPath = "/services/rest"
+    /**
+     Download an image from Flickr
+     
+     - Parameters:
+        - parameters: A dictionary containing, at least, key-value pairs for farm, server, id, 
+     and secret
+        - completion: The completion handler to call after an image has been downloaded
+     */
+    private static func downloadImageWithFlickrParameters(parameters: [String: AnyObject], completion: (NSData?, NSError?) -> Void){
+        let farm = parameters["farm"]
+        let server = parameters["server"]
+        let id = parameters["id"]
+        let secret = parameters["secret"]
+        let url = "https://farm\(farm!).staticflickr.com/\(server!)/\(id!)_\(secret!)_m.jpg"
         
-        static let SearchBBoxHalfWidth = 1.0
-        static let SearchBBoxHalfHeight = 1.0
-        static let SearchLatRange = (-90.0, 90.0)
-        static let SearchLonRange = (-180.0, 180.0)
+        
+        print ("Trying to download from the test URL")
+        request(.GET,url).response(){ _, _, data, error in
+            if let error = error {
+                print("Error downloading image")
+                completion(nil, error)
+            } else {
+                print("Downloaded an image!")
+                completion(data, nil)
+            }
+            
+        }
     }
-    
-    // MARK: Flickr Parameter Keys
-    struct FlickrParameterKeys {
-        static let Method = "method"
-        static let APIKey = "api_key"
-        static let GalleryID = "gallery_id"
-        static let Extras = "extras"
-        static let Format = "format"
-        static let NoJSONCallback = "nojsoncallback"
-        static let SafeSearch = "safe_search"
-        static let Text = "text"
-        static let BoundingBox = "bbox"
-        static let Page = "page"
-    }
-    
-    // MARK: Flickr Parameter Values
-    struct FlickrParameterValues {
-        static let SearchMethod = "flickr.photos.search"
-        static let APIKey = "a4ebce9cbae74391014b23471293fb42"
-        static let ResponseFormat = "json"
-        static let DisableJSONCallback = "1" /* 1 means "yes" */
-        static let GalleryPhotosMethod = "flickr.galleries.getPhotos"
-        static let GalleryID = "5704-72157622566655097"
-        static let MediumURL = "url_m"
-        static let UseSafeSearch = "1"
-    }
-    
-    // MARK: Flickr Response Keys
-    struct FlickrResponseKeys {
-        static let Status = "stat"
-        static let Photos = "photos"
-        static let Photo = "photo"
-        static let Title = "title"
-        static let MediumURL = "url_m"
-        static let Pages = "pages"
-        static let Total = "total"
-    }
-    
-    // MARK: Flickr Response Values
-    struct FlickrResponseValues {
-        static let OKStatus = "ok"
-    }
+
+
+
 }

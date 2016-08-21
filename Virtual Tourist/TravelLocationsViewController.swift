@@ -70,8 +70,15 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
      */
     func persistNewPinAtCoordinate(coordinate coord: CLLocationCoordinate2D){
         let pin = Pin(coordinate: coord, context: sharedContext)
-        for _ in 1...10 {
-            Photo(pin: pin, context: sharedContext)
+        
+        FlickrDownloadManager.downloadImagesForCoordinate(coord) { imageData, error in
+            print ("Download images completed – trying to create Photos")
+            if let image = imageData {
+                Photo(pin: pin, imageData: image, context: self.sharedContext)
+                print("Created Photo object")
+            } else {
+                print("There was an error")
+            }
         }
         stack.save()
         print ("Saved pin with coordinate \(coord)")

@@ -57,21 +57,13 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         collectionView.dataSource = self
         
         do {
-            try self.fetchedResultsController.performFetch()
+            try fetchedResultsController.performFetch()
         } catch {
             let fetchError = error as NSError
             print("\(fetchError), \(fetchError.userInfo)")
         }
         
-        // TODO If FetchResult is empty, download images. Else, load in data
-//        FlickrDownloadManager.downloadImagesForRegion { data, error in
-//            
-//            if let error = error {
-//                print (error.domain)
-//            } else {
-//                print(data)
-//            }
-//        }
+
     }
     
     @IBAction func newCollection(sender: UIBarButtonItem) {

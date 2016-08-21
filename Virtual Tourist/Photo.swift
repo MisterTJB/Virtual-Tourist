@@ -12,17 +12,14 @@ import UIKit
 
 class Photo: NSManagedObject {
     
-    convenience init(pin : Pin, context : NSManagedObjectContext){
+    convenience init(pin : Pin, imageData: NSData, context : NSManagedObjectContext){
         
         if let ent = NSEntityDescription.entityForName("Photo",
                                                        inManagedObjectContext: context){
             self.init(entity: ent, insertIntoManagedObjectContext: context)
             self.photoToPin = pin
+            self.imageData = imageData
             self.identifier = "JUNK"
-            if let img = UIImage(named: "TEST_IMG.jpg") {
-                self.imageData = UIImageJPEGRepresentation(img, 1.0)
-            }
-            
             
         } else{
             fatalError("Unable to find Entity name!")
