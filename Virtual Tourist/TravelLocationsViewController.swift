@@ -71,6 +71,7 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
     func persistNewPinAtCoordinate(coordinate coord: CLLocationCoordinate2D){
         Pin(coordinate: coord, context: sharedContext)
         stack.save()
+        print ("Saved pin with coordinate \(coord)")
     }
     
     
@@ -97,8 +98,7 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let photoAlbumViewController = storyboard.instantiateViewControllerWithIdentifier("PhotoAlbumView") as! PhotoAlbumViewController
-        presentViewController(photoAlbumViewController, animated: true, completion: nil)
-        
+        navigationController?.pushViewController(photoAlbumViewController, animated: true)
     }
     
     
