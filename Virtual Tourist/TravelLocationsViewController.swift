@@ -59,6 +59,7 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
         let pin = MKPointAnnotation()
         pin.coordinate = coord
         mapView.addAnnotation(pin)
+        print ("Dropped pin at \(coord)")
         
     }
     
@@ -74,7 +75,7 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
         FlickrDownloadManager.downloadImagesForCoordinate(coord) { imageData, error in
             print ("Download images completed – trying to create Photos")
             if let image = imageData {
-                Photo(pin: pin, imageData: image, context: self.sharedContext)
+                Photo(pin: pin, context: self.sharedContext)
                 print("Created Photo object")
             } else {
                 print("There was an error")
@@ -106,9 +107,16 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
     
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let photoAlbumViewController = storyboard.instantiateViewControllerWithIdentifier("PhotoAlbumView") as! PhotoAlbumViewController
-        navigationController?.pushViewController(photoAlbumViewController, animated: true)
+        
+        if let coordinate = view.annotation?.coordinate {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let photoAlbumViewController = storyboard.instantiateViewControllerWithIdentifier("PhotoAlbumView") as! PhotoAlbumViewController
+            photoAlbumViewController.longitude = coordinate.longitude
+            photoAlbumViewController.latitude = coordinate.latitude
+            navigationController?.pushViewController(photoAlbumViewController, animated: true)
+        
+        }
+        
     }
     
     

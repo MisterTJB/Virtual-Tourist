@@ -13,6 +13,8 @@ import MapKit
 class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
+    var latitude: Double?
+    var longitude: Double?
     
     lazy var sharedContext: NSManagedObjectContext = {
         // Get the stack
@@ -30,9 +32,11 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         // Initialize Fetch Request
         let fetchRequest = NSFetchRequest(entityName: "Photo")
         
-        // TODO Add NSPredicate to get THIS Pin's photos
         let sortDescriptor = NSSortDescriptor(key: "identifier", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
+        
+        // TODO Add NSPredicate to get THIS Pin's photos
+        // NSPredicate ...
         
         // Initialize Fetched Results Controller
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.sharedContext, sectionNameKeyPath: nil, cacheName: nil)
@@ -47,6 +51,8 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         
         collectionView.delegate = self
         collectionView.dataSource = self
+        
+        print ("Loaded photo album with latitude \(latitude), longitude \(longitude)")
         
         do {
             try fetchedResultsController.performFetch()
@@ -85,7 +91,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
             (collectionView.collectionViewLayout
                 .collectionViewContentSize().width / 2)
                 - (0.5)))
-        imageView.contentMode = .ScaleAspectFill
+        imageView.contentMode = .ScaleAspectFit
         imageView.image = image
         cell.addSubview(imageView)
         return cell
