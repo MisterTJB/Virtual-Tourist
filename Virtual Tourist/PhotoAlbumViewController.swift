@@ -10,9 +10,10 @@ import UIKit
 import CoreData
 import MapKit
 
-class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate {
+class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate, UICollectionViewDelegateFlowLayout {
     
     @IBOutlet weak var collectionView: UICollectionView!
+    
     var latitude: CLLocationDegrees?
     var longitude: CLLocationDegrees?
     
@@ -125,7 +126,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
             (collectionView.collectionViewLayout
                 .collectionViewContentSize().width / 2)
                 - (0.5)))
-        imageView.contentMode = .ScaleAspectFit
+        imageView.contentMode = .ScaleAspectFill
         imageView.image = image
         cell.addSubview(imageView)
         return cell
@@ -134,6 +135,11 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         print("Called controllerDidChangeContent")
         collectionView.reloadData()
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        let width = collectionView.frame.width / 3.5
+        return CGSize(width: width, height: width)
     }
     
     
