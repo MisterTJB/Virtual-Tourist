@@ -13,8 +13,8 @@ import MapKit
 class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
-    var latitude: Double?
-    var longitude: Double?
+    var latitude: CLLocationDegrees?
+    var longitude: CLLocationDegrees?
     
     lazy var sharedContext: NSManagedObjectContext = {
         // Get the stack
@@ -30,21 +30,42 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     
     lazy var fetchedResultsController: NSFetchedResultsController = {
         // Initialize Fetch Request
-        let fetchRequest = NSFetchRequest(entityName: "Photo")
+        let photoFetchRequest = NSFetchRequest(entityName: "Photo")
+        
         
         let sortDescriptor = NSSortDescriptor(key: "identifier", ascending: true)
-        fetchRequest.sortDescriptors = [sortDescriptor]
+        photoFetchRequest.sortDescriptors = [sortDescriptor]
         
-        // TODO Add NSPredicate to get THIS Pin's photos
-        // NSPredicate ...
+        // Only fetch Photos having this Pin as its parent
+        let format = "photoToPin.latitude BETWEEN {\(self.latitude! - 0.0001), \(self.latitude! + 0.0001)} AND photoToPin.longitude BETWEEN {\(self.longitude! - 0.0001), \(self.longitude! + 0.0001)} "
+        photoFetchRequest.predicate = NSPredicate(format: format)
         
         // Initialize Fetched Results Controller
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.sharedContext, sectionNameKeyPath: nil, cacheName: nil)
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: photoFetchRequest, managedObjectContext: self.sharedContext, sectionNameKeyPath: nil, cacheName: nil)
         
         // Configure Fetched Results Controller
         fetchedResultsController.delegate = self
         
         return fetchedResultsController
+    }()
+    
+    lazy var pin: Pin = {
+        // Initialize Fetch Request
+        let pinFetchRequest = NSFetchRequest(entityName: "Pin")
+        
+        // Only fetch Photos having this Pin as its parent
+        let format = "latitude BETWEEN {\(self.latitude! - 0.0001), \(self.latitude! + 0.0001)} AND longitude BETWEEN {\(self.longitude! - 0.0001), \(self.longitude! + 0.0001)} "
+        pinFetchRequest.predicate = NSPredicate(format: format)
+        
+        // Initialize Fetched Results Controller
+        var results = [AnyObject]()
+        do{
+            try results = self.sharedContext.executeFetchRequest(pinFetchRequest)
+        } catch {
+            print ("Could not execute fetch request for Pin")
+        }
+        return results[0] as! Pin
+        
     }()
     
     override func viewDidLoad() {
@@ -61,7 +82,20 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
             print("\(fetchError), \(fetchError.userInfo)")
         }
         
+        if let results = fetchedResultsController.fetchedObjects {
+            if results.count == 0 {
+                FlickrDownloadManager.downloadImagesForCoordinate(CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)) { imageData, error in
+                    print ("Download images completed – trying to create Photos")
+                    if let image = imageData {
+                        Photo(pin: self.pin, image: image, context: self.sharedContext)
+                        print("Created Photo object")
+                    } else {
+                        print("There was an error")
+                    }
+                }
 
+            }
+        }
     }
     
     @IBAction func newCollection(sender: UIBarButtonItem) {
