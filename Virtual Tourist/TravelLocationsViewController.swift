@@ -28,6 +28,7 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
     
     override func viewDidLoad() {
         mapView.delegate = self
+        restoreMapRegion();
         loadPersistedPins()
     }
     
@@ -109,6 +110,33 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
         
     }
     
+    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        let latitude = mapView.region.center.latitude
+        let longitude = mapView.region.center.longitude
+        let latitudeDelta = mapView.region.span.latitudeDelta
+        let longitudeDelta = mapView.region.span.longitudeDelta
+        
+        NSUserDefaults.standardUserDefaults().setDouble(latitude, forKey: "userLatitude")
+        NSUserDefaults.standardUserDefaults().setDouble(longitude, forKey: "userLongitude")
+        NSUserDefaults.standardUserDefaults().setDouble(latitudeDelta, forKey: "userLatitudeDelta")
+        NSUserDefaults.standardUserDefaults().setDouble(longitudeDelta, forKey: "userLongitudeDelta")
+    }
     
+    func restoreMapRegion(){
+        let latitude = NSUserDefaults.standardUserDefaults().doubleForKey("userLatitude")
+        let longitude = NSUserDefaults.standardUserDefaults().doubleForKey("userLongitude")
+        let latitudeDelta = NSUserDefaults.standardUserDefaults().doubleForKey("userLatitudeDelta")
+        let longitudeDelta = NSUserDefaults.standardUserDefaults().doubleForKey("userLongitudeDelta")
+        
+        if (latitude != 0 && longitude != 0 && latitudeDelta != 0 && longitudeDelta != 0){
+        
+            let coordinateToRestore = CLLocationCoordinate2DMake(latitude, longitude)
+            let spanToRestore = MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta)
+        
+            let region = MKCoordinateRegion(center: coordinateToRestore, span: spanToRestore)
+            mapView.setRegion(region, animated: true)
+        }
+        
+    }
 
 }
