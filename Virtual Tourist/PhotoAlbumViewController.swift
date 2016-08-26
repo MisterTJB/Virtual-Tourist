@@ -16,6 +16,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     
     var latitude: CLLocationDegrees?
     var longitude: CLLocationDegrees?
+    @IBOutlet var mapView: MKMapView!
     
     lazy var sharedContext: NSManagedObjectContext = {
         // Get the stack
@@ -74,6 +75,8 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         
         collectionView.delegate = self
         collectionView.dataSource = self
+        setMapRegion()
+        addPinToMap()
         
         // TODO LoadImagesForPin() // If Pin has no photos, download; else Load
         
@@ -156,6 +159,17 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         
     }
     
+    func setMapRegion(){
+        let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!), span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1))
+            mapView.setRegion(region, animated: true)
+        
+    }
     
-    
+    func addPinToMap() {
+        let pin = MKPointAnnotation()
+        pin.coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
+        mapView.addAnnotation(pin)
+        
+    }
+
 }

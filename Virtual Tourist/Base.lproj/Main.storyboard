@@ -139,6 +139,7 @@
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="alT-l2-vI5" id="c3p-XG-Seq"/>
+                        <outlet property="mapView" destination="CFk-lT-574" id="IPD-31-NLd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uQb-7P-8W5" userLabel="First Responder" sceneMemberID="firstResponder"/>
