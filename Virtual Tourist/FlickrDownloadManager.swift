@@ -25,7 +25,7 @@ class FlickrDownloadManager {
      an error to the caller
      
      */
-    static func downloadImagesForCoordinate(coordinate : CLLocationCoordinate2D, completion: (String?, NSError?) -> Void){
+    static func downloadImagesForCoordinate(coordinate : CLLocationCoordinate2D, completion: ([[String:AnyObject]]?, NSError?) -> Void){
         
         Alamofire.request(
             .GET,
@@ -54,10 +54,7 @@ class FlickrDownloadManager {
                 }
                 
                 print ("Search results returned, about to pass back URL")
-                for photoData in photo {
-                
-                    completion(photoData["url_m"] as? String, nil)
-                }
+                completion(photo, nil)
                 
                 
         }

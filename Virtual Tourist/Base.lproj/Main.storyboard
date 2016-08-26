@@ -106,6 +106,13 @@
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="5" minY="5" maxX="5" maxY="5"/>
                                 </collectionViewFlowLayout>
+                                <label key="backgroundView" hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="No Images" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="xF4-2T-Rbq">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="332"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoCell" id="tck-FD-F49">
                                         <rect key="frame" x="5" y="5" width="280" height="280"/>
@@ -141,6 +148,7 @@
                     <connections>
                         <outlet property="collectionView" destination="alT-l2-vI5" id="c3p-XG-Seq"/>
                         <outlet property="mapView" destination="CFk-lT-574" id="IPD-31-NLd"/>
+                        <outlet property="noImagesLabel" destination="xF4-2T-Rbq" id="mF2-Gh-YoX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uQb-7P-8W5" userLabel="First Responder" sceneMemberID="firstResponder"/>

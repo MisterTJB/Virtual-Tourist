@@ -13,10 +13,11 @@ import MapKit
 class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate, UICollectionViewDelegateFlowLayout {
     
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet var noImagesLabel: UILabel!
+    @IBOutlet var mapView: MKMapView!
     
     var latitude: CLLocationDegrees?
     var longitude: CLLocationDegrees?
-    @IBOutlet var mapView: MKMapView!
     
     lazy var sharedContext: NSManagedObjectContext = {
         // Get the stack
@@ -91,10 +92,19 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         }
         
         if (fetchedResultsController.fetchedObjects?.count == 0){
-            FlickrDownloadManager.downloadImagesForCoordinate(CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)){ url, error in
-                if let url = url {
-                    Photo(pin: self.pin, url: url, context: self.sharedContext)
+            FlickrDownloadManager.downloadImagesForCoordinate(CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)){ photoData, error in
+                
+                if let photoData = photoData {
+                    for photo in photoData {
+                        if let url = photo["url_m"] as? String {
+                            Photo(pin: self.pin, url: url, context: self.sharedContext)
+                        }
+                    }
                     self.stack.save()
+                    
+                }
+                if photoData?.count == 0 {
+                    self.noImagesLabel.hidden = false
                 }
                 
             }
