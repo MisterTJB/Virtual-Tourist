@@ -76,7 +76,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         collectionView.delegate = self
         collectionView.dataSource = self
         setMapRegion()
-        addPinToMap()
+        addPinToMapForAlbumCoordinates()
         
         // TODO LoadImagesForPin() // If Pin has no photos, download; else Load
         
@@ -159,13 +159,25 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         
     }
     
-    func setMapRegion(){
-        let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!), span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1))
+    /**
+     Sets the displayed region for the map view, such that the region is centered 
+     on the coordinates for this album
+     
+     - Parameters:
+        - latitudeDelta (optional): The latitude span for the region
+        - longitudeDelta (optional): The longitude span for the region
+     */
+    func setMapRegion(latitudeDelta: Double = 1, longitudeDelta: Double = 1){
+        let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!), span: MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta))
             mapView.setRegion(region, animated: true)
         
     }
     
-    func addPinToMap() {
+    /**
+     Adds a pin to the map view to indicate the approximate location for the 
+     photos in the album
+     */
+    func addPinToMapForAlbumCoordinates() {
         let pin = MKPointAnnotation()
         pin.coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
         mapView.addAnnotation(pin)
