@@ -75,10 +75,13 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         collectionView.delegate = self
         collectionView.dataSource = self
         
-        print ("Loaded photo album with latitude \(latitude), longitude \(longitude)")
+        // TODO LoadImagesForPin() // If Pin has no photos, download; else Load
+        
+        
         
         do {
             try fetchedResultsController.performFetch()
+            print ("Loaded photo album with latitude \(latitude!), longitude \(longitude!)")
         } catch {
             let fetchError = error as NSError
             print("\(fetchError), \(fetchError.userInfo)")
@@ -89,7 +92,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
 //                FlickrDownloadManager.downloadImagesForCoordinate(CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)) { imageData, error in
 //                    print ("Download images completed – trying to create Photos")
 //                    if let image = imageData {
-//                        Photo(pin: self.pin, image: image, context: self.sharedContext)
+//                        Photo(pin: self.pin, image: image, context: self.sharedContext) 
 //                        print("Created Photo object")
 //                    } else {
 //                        print("There was an error")
@@ -107,7 +110,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("Called numberOfItemsInSection")
+        
         return fetchedResultsController.fetchedObjects!.count
     }
     
