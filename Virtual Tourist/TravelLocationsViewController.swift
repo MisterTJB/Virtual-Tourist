@@ -60,7 +60,6 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
         let pin = MKPointAnnotation()
         pin.coordinate = coord
         mapView.addAnnotation(pin)
-        print ("Dropped pin at \(coord)")
         
     }
     
@@ -95,22 +94,10 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
         }
     }
     
-    
-    
-    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-        
-        if let coordinate = view.annotation?.coordinate {
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let photoAlbumViewController = storyboard.instantiateViewControllerWithIdentifier("PhotoAlbumView") as! PhotoAlbumViewController
-            photoAlbumViewController.longitude = coordinate.longitude
-            photoAlbumViewController.latitude = coordinate.latitude
-            navigationController?.pushViewController(photoAlbumViewController, animated: true)
-        
-        }
-        
-    }
-    
-    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+    /**
+     Persists the map region currently being displayed in the MapView
+     */
+    func saveCurrentMapRegion(){
         let latitude = mapView.region.center.latitude
         let longitude = mapView.region.center.longitude
         let latitudeDelta = mapView.region.span.latitudeDelta
@@ -122,6 +109,10 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
         NSUserDefaults.standardUserDefaults().setDouble(longitudeDelta, forKey: "userLongitudeDelta")
     }
     
+    /**
+     Restores the most-recent map region that was saved, and sets the MapView 
+     to display that region
+     */
     func restoreMapRegion(){
         let latitude = NSUserDefaults.standardUserDefaults().doubleForKey("userLatitude")
         let longitude = NSUserDefaults.standardUserDefaults().doubleForKey("userLongitude")
@@ -137,6 +128,28 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
             mapView.setRegion(region, animated: true)
         }
         
+    }
+    
+    /**
+     Called when a user taps an annotation. Manages the segue to the
+     PhotoAlbumViewController, and sets the latitude and longitude of the
+     relevant Pin
+     */
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+        
+        if let coordinate = view.annotation?.coordinate {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let photoAlbumViewController = storyboard.instantiateViewControllerWithIdentifier("PhotoAlbumView") as! PhotoAlbumViewController
+            photoAlbumViewController.longitude = coordinate.longitude
+            photoAlbumViewController.latitude = coordinate.latitude
+            navigationController?.pushViewController(photoAlbumViewController, animated: true)
+            
+        }
+        
+    }
+    
+    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        saveCurrentMapRegion()
     }
 
 }
