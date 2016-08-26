@@ -79,10 +79,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         setMapRegion()
         addPinToMapForAlbumCoordinates()
         
-        // TODO LoadImagesForPin() // If Pin has no photos, download; else Load
-        
-        
-        
         do {
             try fetchedResultsController.performFetch()
             print ("Loaded photo album with latitude \(latitude!), longitude \(longitude!)")
