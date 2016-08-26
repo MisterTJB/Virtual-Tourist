@@ -100,21 +100,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
             }
         
         }
-        
-//        if let results = fetchedResultsController.fetchedObjects {
-//            if results.count == 0 {
-//                FlickrDownloadManager.downloadImagesForCoordinate(CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)) { imageData, error in
-//                    print ("Download images completed – trying to create Photos")
-//                    if let image = imageData {
-//                        Photo(pin: self.pin, image: image, context: self.sharedContext) 
-//                        print("Created Photo object")
-//                    } else {
-//                        print("There was an error")
-//                    }
-//                }
-//
-//            }
-//        }
     }
     
     @IBAction func newCollection(sender: UIBarButtonItem) {
