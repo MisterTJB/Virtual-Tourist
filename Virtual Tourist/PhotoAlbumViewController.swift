@@ -35,7 +35,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         let photoFetchRequest = NSFetchRequest(entityName: "Photo")
         
         
-        let sortDescriptor = NSSortDescriptor(key: "identifier", ascending: true)
+        let sortDescriptor = NSSortDescriptor(key: "date", ascending: true)
         photoFetchRequest.sortDescriptors = [sortDescriptor]
         
         // Only fetch Photos having this Pin as its parent
@@ -90,6 +90,17 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
             print("\(fetchError), \(fetchError.userInfo)")
         }
         
+        if (fetchedResultsController.fetchedObjects?.count == 0){
+            FlickrDownloadManager.downloadImagesForCoordinate(CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)){ url, error in
+                if let url = url {
+                    Photo(pin: self.pin, url: url, context: self.sharedContext)
+                    self.stack.save()
+                }
+                
+            }
+        
+        }
+        
 //        if let results = fetchedResultsController.fetchedObjects {
 //            if results.count == 0 {
 //                FlickrDownloadManager.downloadImagesForCoordinate(CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)) { imageData, error in
@@ -119,22 +130,31 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCell", forIndexPath: indexPath)
-        guard let photo = fetchedResultsController.fetchedObjects?[indexPath.item] as? Photo,
-            image = UIImage(data: photo.imageData!) else {
-                print("Could not load stored image")
-                return cell
+        
+        if let photo = fetchedResultsController.fetchedObjects?[indexPath.item] as? Photo {
+            
+            if photo.local == false {
+                
+                FlickrDownloadManager.downloadImageWithUrl(photo.url!) { data, error in
+                    
+                    if let data = data {
+                        photo.imageData = data
+                        photo.local = true
+                        self.stack.save()
+                    }
+                    
+                }
+                
+            }
+            
+            if let image = UIImage(data: photo.imageData!) {
+                let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: cell.bounds.width, height: cell.bounds.height))
+                imageView.image = image
+                imageView.contentMode = .ScaleAspectFill
+                cell.addSubview(imageView)
+            }
+            
         }
-        let imageView = UIImageView(frame:CGRectMake(   0,
-            0,
-            (collectionView.collectionViewLayout
-                .collectionViewContentSize().width / 2)
-                - (0.5),
-            (collectionView.collectionViewLayout
-                .collectionViewContentSize().width / 2)
-                - (0.5)))
-        imageView.contentMode = .ScaleAspectFill
-        imageView.image = image
-        cell.addSubview(imageView)
         return cell
     }
     
@@ -144,7 +164,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        let width = collectionView.frame.width / 3.5
+        let width = (collectionView.frame.width - 20) / 3
         return CGSize(width: width, height: width)
     }
     
@@ -153,6 +173,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         print ("Trying to delete Photo with index \(indexPath.item)")
         if let photoToDelete = fetchedResultsController.fetchedObjects?[indexPath.item] as? Photo {
             sharedContext.deleteObject(photoToDelete)
+            stack.save()
             print ("Deleted photo at index \(indexPath.item)")
         }
         

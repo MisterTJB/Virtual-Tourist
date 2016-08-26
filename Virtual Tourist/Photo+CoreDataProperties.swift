@@ -16,6 +16,8 @@ extension Photo {
 
     @NSManaged var imageData: NSData?
     @NSManaged var photoToPin: NSManagedObject?
-    @NSManaged var identifier: String?
+    @NSManaged var date: NSDate?
+    @NSManaged var url: String?
+    @NSManaged var local: Bool
 
 }

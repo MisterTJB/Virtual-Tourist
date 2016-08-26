@@ -25,7 +25,7 @@ class FlickrDownloadManager {
      an error to the caller
      
      */
-    static func downloadImagesForCoordinate(coordinate : CLLocationCoordinate2D, completion: (NSData?, NSError?) -> Void){
+    static func downloadImagesForCoordinate(coordinate : CLLocationCoordinate2D, completion: (String?, NSError?) -> Void){
         
         Alamofire.request(
             .GET,
@@ -53,18 +53,10 @@ class FlickrDownloadManager {
                         return
                 }
                 
-                print ("Search results returned, about to download images")
+                print ("Search results returned, about to pass back URL")
                 for photoData in photo {
                 
-                    downloadImageWithFlickrParameters(photoData){ imageData, error in
-                        
-                        guard let data = imageData else {
-                            completion(nil, error)
-                            return
-                        }
-                        completion(data, nil)
-                    
-                    }
+                    completion(photoData["url_m"] as? String, nil)
                 }
                 
                 
@@ -80,12 +72,12 @@ class FlickrDownloadManager {
      and secret
         - completion: The completion handler to call after an image has been downloaded
      */
-    private static func downloadImageWithFlickrParameters(parameters: [String: AnyObject], completion: (NSData?, NSError?) -> Void){
-        let farm = parameters["farm"]
-        let server = parameters["server"]
-        let id = parameters["id"]
-        let secret = parameters["secret"]
-        let url = "https://farm\(farm!).staticflickr.com/\(server!)/\(id!)_\(secret!)_m.jpg"
+     static func downloadImageWithUrl(url: String, completion: (NSData?, NSError?) -> Void){
+//        let farm = parameters["farm"]
+//        let server = parameters["server"]
+//        let id = parameters["id"]
+//        let secret = parameters["secret"]
+//        let url = "https://farm\(farm!).staticflickr.com/\(server!)/\(id!)_\(secret!)_m.jpg"
         
         
         print ("Trying to download from the test URL")
