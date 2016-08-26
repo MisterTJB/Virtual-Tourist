@@ -54,18 +54,19 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         // Initialize Fetch Request
         let pinFetchRequest = NSFetchRequest(entityName: "Pin")
         
-        // Only fetch Photos having this Pin as its parent
+        // Only fetch Pins associated with the coordinate that this PhotoAlbumViewController is 
+        
         let format = "latitude BETWEEN {\(self.latitude! - 0.0001), \(self.latitude! + 0.0001)} AND longitude BETWEEN {\(self.longitude! - 0.0001), \(self.longitude! + 0.0001)} "
         pinFetchRequest.predicate = NSPredicate(format: format)
         
         // Initialize Fetched Results Controller
-        var results = [AnyObject]()
+        var result: AnyObject?
         do{
-            try results = self.sharedContext.executeFetchRequest(pinFetchRequest)
+            try result = self.sharedContext.executeFetchRequest(pinFetchRequest)[0]
         } catch {
             print ("Could not execute fetch request for Pin")
         }
-        return results[0] as! Pin
+        return result as! Pin
         
     }()
     
@@ -83,20 +84,20 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
             print("\(fetchError), \(fetchError.userInfo)")
         }
         
-        if let results = fetchedResultsController.fetchedObjects {
-            if results.count == 0 {
-                FlickrDownloadManager.downloadImagesForCoordinate(CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)) { imageData, error in
-                    print ("Download images completed – trying to create Photos")
-                    if let image = imageData {
-                        Photo(pin: self.pin, image: image, context: self.sharedContext)
-                        print("Created Photo object")
-                    } else {
-                        print("There was an error")
-                    }
-                }
-
-            }
-        }
+//        if let results = fetchedResultsController.fetchedObjects {
+//            if results.count == 0 {
+//                FlickrDownloadManager.downloadImagesForCoordinate(CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)) { imageData, error in
+//                    print ("Download images completed – trying to create Photos")
+//                    if let image = imageData {
+//                        Photo(pin: self.pin, image: image, context: self.sharedContext)
+//                        print("Created Photo object")
+//                    } else {
+//                        print("There was an error")
+//                    }
+//                }
+//
+//            }
+//        }
     }
     
     @IBAction func newCollection(sender: UIBarButtonItem) {
@@ -111,7 +112,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        print("Called cellForItemAtIndexPath")
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCell", forIndexPath: indexPath)
         guard let photo = fetchedResultsController.fetchedObjects?[indexPath.item] as? Photo,
             image = UIImage(data: photo.imageData!) else {
@@ -142,6 +142,16 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         return CGSize(width: width, height: width)
     }
     
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        print ("Trying to delete Photo with index \(indexPath.item)")
+        if let photoToDelete = fetchedResultsController.fetchedObjects?[indexPath.item] as? Photo {
+            sharedContext.deleteObject(photoToDelete)
+            print ("Deleted photo at index \(indexPath.item)")
+        }
+        
+        
+    }
     
     
     
