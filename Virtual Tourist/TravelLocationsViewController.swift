@@ -42,9 +42,8 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
         if (sender.state == UIGestureRecognizerState.Ended){
             let touchCoordinate = sender.locationInView(self.mapView)
             let mapCoordinate = mapView.convertPoint(touchCoordinate, toCoordinateFromView: self.mapView)
-            persistNewPinAtCoordinate(coordinate: mapCoordinate);
+            persistNewPinAtCoordinate(coordinate: mapCoordinate)
             addPinToMapAtCoordinate(coordinate: mapCoordinate)
-            
         }
     }
     
@@ -119,6 +118,7 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
         let latitudeDelta = NSUserDefaults.standardUserDefaults().doubleForKey("userLatitudeDelta")
         let longitudeDelta = NSUserDefaults.standardUserDefaults().doubleForKey("userLongitudeDelta")
         
+        // doubleForKey: returns 0 if the key is not found
         if (latitude != 0 && longitude != 0 && latitudeDelta != 0 && longitudeDelta != 0){
         
             let coordinateToRestore = CLLocationCoordinate2DMake(latitude, longitude)
@@ -131,8 +131,7 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
     }
     
     /**
-     Called when a user taps an annotation. Manages the segue to the
-     PhotoAlbumViewController, and sets the latitude and longitude of the
+     Manages the segue to the PhotoAlbumViewController, and sets the latitude and longitude of the
      relevant Pin
      */
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
@@ -148,6 +147,9 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
         
     }
     
+    /**
+     Saves the current map region when a user moves the map
+     */
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         saveCurrentMapRegion()
     }
