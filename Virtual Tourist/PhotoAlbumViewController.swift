@@ -78,7 +78,17 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         collectionView.dataSource = self
         setMapRegion()
         addPinToMapForAlbumCoordinates()
+        preparePhotoObjects()
         
+    }
+    
+    /**
+     Determine whether an Pin has already had Photos associated with it. If not, Photo 
+     objects are created and associated with the Pin.
+     */
+    func preparePhotoObjects(){
+        
+        // Retrieve relevant images from CoreData
         do {
             try fetchedResultsController.performFetch()
             print ("Loaded photo album with latitude \(latitude!), longitude \(longitude!)")
@@ -87,24 +97,34 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
             print("\(fetchError), \(fetchError.userInfo)")
         }
         
+        // If no Photo objects are associated with this Pin, query Flickr for relevant images
         if (fetchedResultsController.fetchedObjects?.count == 0){
-            FlickrDownloadManager.downloadImagesForCoordinate(CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)){ photoData, error in
-                
-                if let photoData = photoData {
-                    for photo in photoData {
-                        if let url = photo["url_m"] as? String {
-                            Photo(pin: self.pin, url: url, context: self.sharedContext)
-                        }
+            downloadImageURLsFromFlickr()
+        }
+    }
+    
+    /**
+     Downloads image URLs from Flickr and -- for each URL -- creates Photo objects with a placeholder 
+     image
+     */
+    func downloadImageURLsFromFlickr(){
+        FlickrDownloadManager.downloadImagesForCoordinate(CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)){ photoData, error in
+            
+            if let photoData = photoData {
+                for photo in photoData {
+                    if let url = photo["url_m"] as? String {
+                        Photo(pin: self.pin, url: url, context: self.sharedContext)
                     }
-                    self.stack.save()
-                    
                 }
-                if photoData?.count == 0 {
-                    self.noImagesLabel.hidden = false
-                }
+                self.stack.save()
                 
             }
-        
+            
+            // If there are no photos associated with this location, show the noImagesLabel
+            if photoData?.count == 0 {
+                self.noImagesLabel.hidden = false
+            }
+            
         }
     }
     
