@@ -82,21 +82,9 @@
                                     <navigationItem title="Title" id="PAA-P1-FsL"/>
                                 </items>
                             </navigationBar>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="CFk-lT-574">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" zoomEnabled="NO" scrollEnabled="NO" rotateEnabled="NO" pitchEnabled="NO" showsBuildings="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CFk-lT-574">
                                 <rect key="frame" x="0.0" y="44" width="600" height="180"/>
                             </mapView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mZe-9S-9Ax">
-                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
-                                <items>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="UoC-7F-34e"/>
-                                    <barButtonItem title="New Collection" id="V7K-RC-jgQ">
-                                        <connections>
-                                            <action selector="newCollection:" destination="AcL-u7-gQ7" id="7f9-hv-IAa"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="0wK-57-4Xz"/>
-                                </items>
-                            </toolbar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="alT-l2-vI5">
                                 <rect key="frame" x="0.0" y="224" width="600" height="332"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -126,6 +114,18 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mZe-9S-9Ax">
+                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="UoC-7F-34e"/>
+                                    <barButtonItem enabled="NO" title="New Collection" id="V7K-RC-jgQ">
+                                        <connections>
+                                            <action selector="newCollection:" destination="AcL-u7-gQ7" id="7f9-hv-IAa"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="0wK-57-4Xz"/>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -148,6 +148,7 @@
                     <connections>
                         <outlet property="collectionView" destination="alT-l2-vI5" id="c3p-XG-Seq"/>
                         <outlet property="mapView" destination="CFk-lT-574" id="IPD-31-NLd"/>
+                        <outlet property="newCollectionButton" destination="V7K-RC-jgQ" id="B7C-n4-eud"/>
                         <outlet property="noImagesLabel" destination="xF4-2T-Rbq" id="mF2-Gh-YoX"/>
                     </connections>
                 </viewController>
