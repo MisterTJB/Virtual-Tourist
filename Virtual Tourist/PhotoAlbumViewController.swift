@@ -112,8 +112,12 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
             
             if let photoData = photoData {
                 for photo in photoData {
-                    if let url = photo["url_m"] as? String {
-                        Photo(pin: self.pin, url: url, context: self.sharedContext)
+                    if let url = photo["url_m"] as? String,
+                    let dateTaken = photo["datetaken"] as? String {
+                        let dateFormatter = NSDateFormatter()
+                        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                        let date = dateFormatter.dateFromString(dateTaken)
+                        Photo(pin: self.pin, date: date, url: url, context: self.sharedContext)
                     }
                 }
                 self.stack.save()

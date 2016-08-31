@@ -34,9 +34,10 @@ class FlickrDownloadManager {
             "api_key": "a4ebce9cbae74391014b23471293fb42",
             "lat": coordinate.latitude,
             "lon": coordinate.longitude,
+            "per_page": "12",
             "format": "json",
             "nojsoncallback": "1",
-            "extras": "url_m"],
+            "extras": "url_m,date_taken"],
             encoding: .URL)
             .validate()
             .responseJSON { (response) -> Void in
