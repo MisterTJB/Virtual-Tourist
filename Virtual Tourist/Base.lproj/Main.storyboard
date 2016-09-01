@@ -120,7 +120,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="UoC-7F-34e"/>
                                     <barButtonItem enabled="NO" title="New Collection" id="V7K-RC-jgQ">
                                         <connections>
-                                            <action selector="newCollection:" destination="AcL-u7-gQ7" id="7f9-hv-IAa"/>
+                                            <action selector="newCollection:" destination="AcL-u7-gQ7" id="OID-R9-9iY"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="0wK-57-4Xz"/>
@@ -148,7 +148,6 @@
                     <connections>
                         <outlet property="collectionView" destination="alT-l2-vI5" id="c3p-XG-Seq"/>
                         <outlet property="mapView" destination="CFk-lT-574" id="IPD-31-NLd"/>
-                        <outlet property="newCollectionButton" destination="V7K-RC-jgQ" id="B7C-n4-eud"/>
                         <outlet property="noImagesLabel" destination="xF4-2T-Rbq" id="mF2-Gh-YoX"/>
                     </connections>
                 </viewController>
