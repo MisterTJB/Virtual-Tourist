@@ -13,8 +13,9 @@ import MapKit
 class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate, UICollectionViewDelegateFlowLayout {
     
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet var noImagesLabel: UILabel!
+    @IBOutlet var feedbackLabel: UILabel!
     @IBOutlet var mapView: MKMapView!
+    @IBOutlet var newCollectionButton: UIBarButtonItem!
     
     var latitude: CLLocationDegrees?
     var longitude: CLLocationDegrees?
@@ -108,6 +109,9 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
      image
      */
     func downloadImageURLsFromFlickr(){
+        newCollectionButton.enabled = false
+        feedbackLabel.text = "Searching Flickr..."
+        feedbackLabel.hidden = false
         FlickrDownloadManager.downloadImagesForCoordinate(CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)){ photoData, error in
             
             if let photoData = photoData {
@@ -121,21 +125,56 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
                     }
                 }
                 self.stack.save()
-                
+                self.feedbackLabel.hidden = true
+            } else {
+                self.feedbackLabel.text = "Network Error"
+                self.feedbackLabel.hidden = false
             }
             
             // If there are no photos associated with this location, show the noImagesLabel
             if photoData?.count == 0 {
-                self.noImagesLabel.hidden = false
+                self.feedbackLabel.text = "No Images"
+                self.feedbackLabel.hidden = false
             }
             
+            self.downloadImagesFromFlickr(){
+                print ("Downloaded images")
+            }
         }
+        
+
+        
+    }
+    
+    func downloadImagesFromFlickr(completion: () -> ()){
+        
+        
+        for photo in fetchedResultsController.fetchedObjects! {
+            print ("HERE!!!")
+            let p = photo as! Photo
+            FlickrDownloadManager.downloadImageWithUrl(p.url!){ data, error in
+                
+                if let data = data {
+                    p.imageData = data
+                    p.local = true
+                    self.stack.save()
+                }
+                
+            }
+        
+        }
+        completion()
+        
     }
     
     @IBAction func newCollection(sender: UIBarButtonItem) {
-        // TODO The Photo Album view has a button that initiates the download 
-        // of a new album, replacing theimages in the photo album with a new 
-        // set from Flickr.
+        for photo in fetchedResultsController.fetchedObjects! {
+            sharedContext.deleteObject(photo as! Photo)
+        }
+        stack.save()
+        
+        feedbackLabel.hidden = true
+        downloadImageURLsFromFlickr()
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -148,20 +187,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         
         if let photo = fetchedResultsController.fetchedObjects?[indexPath.item] as? Photo {
             
-            if photo.local == false {
-                
-                FlickrDownloadManager.downloadImageWithUrl(photo.url!) { data, error in
-                    
-                    if let data = data {
-                        photo.imageData = data
-                        photo.local = true
-                        self.stack.save()
-                    }
-                    
-                }
-                
-            }
-            
             if let image = UIImage(data: photo.imageData!) {
                 let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: cell.bounds.width, height: cell.bounds.height))
                 imageView.image = image
@@ -173,9 +198,20 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         return cell
     }
     
+    func downloading(photos: [Photo]) -> Bool {
+        var retVal = false
+        for photo in photos{
+            retVal = retVal || !photo.local
+        }
+        return retVal
+    }
+    
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         print("Called controllerDidChangeContent")
         collectionView.reloadData()
+        if !downloading(controller.fetchedObjects as! [Photo]) {
+            self.newCollectionButton.enabled = true
+        }
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {

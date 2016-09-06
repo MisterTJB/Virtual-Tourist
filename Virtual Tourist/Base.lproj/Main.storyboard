@@ -118,7 +118,7 @@
                                 <rect key="frame" x="0.0" y="556" width="600" height="44"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="UoC-7F-34e"/>
-                                    <barButtonItem enabled="NO" title="New Collection" id="V7K-RC-jgQ">
+                                    <barButtonItem title="New Collection" id="V7K-RC-jgQ">
                                         <connections>
                                             <action selector="newCollection:" destination="AcL-u7-gQ7" id="OID-R9-9iY"/>
                                         </connections>
@@ -147,8 +147,9 @@
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="alT-l2-vI5" id="c3p-XG-Seq"/>
+                        <outlet property="feedbackLabel" destination="xF4-2T-Rbq" id="1wu-kC-8xu"/>
                         <outlet property="mapView" destination="CFk-lT-574" id="IPD-31-NLd"/>
-                        <outlet property="noImagesLabel" destination="xF4-2T-Rbq" id="mF2-Gh-YoX"/>
+                        <outlet property="newCollectionButton" destination="V7K-RC-jgQ" id="KUp-Rw-AoQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uQb-7P-8W5" userLabel="First Responder" sceneMemberID="firstResponder"/>

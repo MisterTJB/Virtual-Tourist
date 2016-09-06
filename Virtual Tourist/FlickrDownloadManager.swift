@@ -8,7 +8,6 @@
 
 import Foundation
 import Alamofire
-import UIKit
 import MapKit
 
 
@@ -27,17 +26,83 @@ class FlickrDownloadManager {
      */
     static func downloadImagesForCoordinate(coordinate : CLLocationCoordinate2D, completion: ([[String:AnyObject]]?, NSError?) -> Void){
         
+        getNumPagesForCoordinate(coordinate){ pages, error in
+            
+            print("Got number of pages")
+            
+            guard let pages = pages else {
+                completion(nil, error)
+                return
+            }
+            
+            print ("Choosing random page")
+            // Restrict upper bound to 100 to prevent Flickr bug
+            let pagesUpperBound = min(pages, 100)
+            let randomPage = arc4random_uniform(UInt32(pagesUpperBound)) + 1
+            print ("Random page is \(randomPage)")
+            
+        
+            Alamofire.request(
+                .GET,
+                "https://api.flickr.com/services/rest/",
+                parameters: ["method": "flickr.photos.search",
+                "api_key": "a4ebce9cbae74391014b23471293fb42",
+                "lat": coordinate.latitude,
+                "lon": coordinate.longitude,
+                "per_page": "21",
+                "page": Int(randomPage),
+                "format": "json",
+                "nojsoncallback": "1",
+                "extras": "url_m,date_taken"],
+                encoding: .URL)
+                .validate()
+                .responseJSON { (response) -> Void in
+                    print (response.request?.URLString)
+                    guard response.result.isSuccess else {
+                        print("Error while fetching photos: \(response.result.error)")
+                        completion(nil, NSError(domain: "Initial Flickr request was unsuccessful", code: 0, userInfo: nil))
+                        return
+                    }
+                    
+                    guard let result = response.result.value as? [String: AnyObject],
+                        photos = result["photos"] as? [String: AnyObject],
+                        photo = photos["photo"] as? [[String: AnyObject]] else {
+                            completion(nil, NSError(domain: "Initial Flickr request response was malformed", code: 0, userInfo: nil))
+                            return
+                    }
+                    
+                    print ("Search results returned, about to pass back URL")
+                    print ("URL: \(photo[0]["url_m"]!)")
+                    completion(photo, nil)
+                }
+            
+                
+        }
+    
+    }
+    
+    /**
+     Determine how many pages of results a Flickr search will return
+     
+     - Parameters:
+     - coordinate: The coordinate about which to search for images
+     - completion: The completion handler to call, returning an image (represented as NSData) or
+     an error to the caller
+     
+     */
+    private static func getNumPagesForCoordinate(coordinate : CLLocationCoordinate2D, completion: (Int?, NSError?) -> Void){
+        
         Alamofire.request(
             .GET,
             "https://api.flickr.com/services/rest/",
             parameters: ["method": "flickr.photos.search",
-            "api_key": "a4ebce9cbae74391014b23471293fb42",
-            "lat": coordinate.latitude,
-            "lon": coordinate.longitude,
-            "per_page": "12",
-            "format": "json",
-            "nojsoncallback": "1",
-            "extras": "url_m,date_taken"],
+                "api_key": "a4ebce9cbae74391014b23471293fb42",
+                "lat": coordinate.latitude,
+                "lon": coordinate.longitude,
+                "per_page": "21",
+                "format": "json",
+                "nojsoncallback": "1",
+                "extras": "url_m,date_taken"],
             encoding: .URL)
             .validate()
             .responseJSON { (response) -> Void in
@@ -48,16 +113,13 @@ class FlickrDownloadManager {
                 }
                 
                 guard let result = response.result.value as? [String: AnyObject],
-                    photos = result["photos"] as? [String: AnyObject],
-                    photo = photos["photo"] as? [[String: AnyObject]] else {
+                    let photos = result["photos"] as? [String: AnyObject] else {
                         completion(nil, NSError(domain: "Initial Flickr request response was malformed", code: 0, userInfo: nil))
                         return
                 }
                 
-                print ("Search results returned, about to pass back URL")
-                completion(photo, nil)
-                
-                
+                print ("Search result will return \(photos["pages"]) results")
+                completion(photos["pages"] as! Int, nil)
         }
     
     }
@@ -78,7 +140,7 @@ class FlickrDownloadManager {
 //        let url = "https://farm\(farm!).staticflickr.com/\(server!)/\(id!)_\(secret!)_m.jpg"
         
         
-        print ("Trying to download from the test URL")
+        print ("URL: \(url)")
         request(.GET,url).response(){ _, _, data, error in
             if let error = error {
                 print("Error downloading image")
