@@ -27,6 +27,7 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
     }()
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         mapView.delegate = self
         restoreMapRegion();
         loadPersistedPins()
@@ -135,7 +136,6 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
      relevant Pin
      */
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-        
         if let coordinate = view.annotation?.coordinate {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let photoAlbumViewController = storyboard.instantiateViewControllerWithIdentifier("PhotoAlbumView") as! PhotoAlbumViewController
@@ -144,6 +144,7 @@ class TravelLocationsViewController : UIViewController, MKMapViewDelegate {
             navigationController?.pushViewController(photoAlbumViewController, animated: true)
             
         }
+        mapView.deselectAnnotation(view.annotation, animated: false)
         
     }
     

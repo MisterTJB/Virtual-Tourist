@@ -74,7 +74,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     }()
     
     override func viewDidLoad() {
-        
+        super.viewDidLoad()
         collectionView.delegate = self
         collectionView.dataSource = self
         setMapRegion()
