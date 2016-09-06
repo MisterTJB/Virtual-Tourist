@@ -42,6 +42,21 @@ class FlickrDownloadManager {
     
     }
     
+    static func downloadImagesForPhotos(photos: [Photo]){
+        for photo in photos {
+            let p = photo as! Photo
+            downloadImageWithUrl(p.url!){ data, error in
+                
+                if let data = data {
+                    p.imageData = data
+                    p.local = true
+                    self.stack.save()
+                }
+                
+            }
+        }
+    }
+    
     
     /**
      Download images from Flickr containing data about images in the region of a given coordinate
@@ -52,7 +67,7 @@ class FlickrDownloadManager {
      an error to the caller
      
      */
-    static func downloadImagesForCoordinates(latitude: Double, longitude: Double, completion: ([[String:AnyObject]]?, NSError?) -> Void){
+    private static func downloadImagesForCoordinates(latitude: Double, longitude: Double, completion: ([[String:AnyObject]]?, NSError?) -> Void){
         
         getNumPagesForCoordinates(latitude, longitude: longitude){ pages, error in
             
@@ -158,7 +173,7 @@ class FlickrDownloadManager {
      and secret
         - completion: The completion handler to call after an image has been downloaded
      */
-     static func downloadImageWithUrl(url: String, completion: (NSData?, NSError?) -> Void){
+     private static func downloadImageWithUrl(url: String, completion: (NSData?, NSError?) -> Void){
         
         
         print ("URL: \(url)")
@@ -171,21 +186,6 @@ class FlickrDownloadManager {
                 completion(data, nil)
             }
             
-        }
-    }
-    
-    static func downloadImagesForPhotos(photos: [Photo]){
-        for photo in photos {
-            let p = photo as! Photo
-            downloadImageWithUrl(p.url!){ data, error in
-                
-                if let data = data {
-                    p.imageData = data
-                    p.local = true
-                    self.stack.save()
-                }
-                
-            }
         }
     }
 
