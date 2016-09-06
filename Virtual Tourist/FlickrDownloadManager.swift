@@ -9,10 +9,38 @@
 import Foundation
 import Alamofire
 import MapKit
+import CoreData
 
 
 
 class FlickrDownloadManager {
+    
+    static var stack: CoreDataStack = {
+        let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return delegate.stack
+    }()
+    
+    static func downloadImagesForPinAndSaveInContext(pin: Pin, context: NSManagedObjectContext, completion: (NSError?) -> Void){
+        
+        downloadImagesForCoordinates(Double(pin.latitude!), longitude: Double(pin.longitude!)) { photoData, error in
+            if let photoData = photoData {
+                for photo in photoData {
+                    if let url = photo["url_m"] as? String,
+                        let dateTaken = photo["datetaken"] as? String {
+                        let dateFormatter = NSDateFormatter()
+                        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                        let date = dateFormatter.dateFromString(dateTaken)
+                        let _  = Photo(pin: pin, date: date, url: url, context: context)
+                    }
+                }
+                self.stack.save()
+                completion(nil)
+            }
+            completion(error)
+        }
+        
+    
+    }
     
     
     /**
@@ -24,9 +52,9 @@ class FlickrDownloadManager {
      an error to the caller
      
      */
-    static func downloadImagesForCoordinate(coordinate : CLLocationCoordinate2D, completion: ([[String:AnyObject]]?, NSError?) -> Void){
+    static func downloadImagesForCoordinates(latitude: Double, longitude: Double, completion: ([[String:AnyObject]]?, NSError?) -> Void){
         
-        getNumPagesForCoordinate(coordinate){ pages, error in
+        getNumPagesForCoordinates(latitude, longitude: longitude){ pages, error in
             
             print("Got number of pages")
             
@@ -47,8 +75,8 @@ class FlickrDownloadManager {
                 "https://api.flickr.com/services/rest/",
                 parameters: ["method": "flickr.photos.search",
                 "api_key": "a4ebce9cbae74391014b23471293fb42",
-                "lat": coordinate.latitude,
-                "lon": coordinate.longitude,
+                "lat": latitude,
+                "lon": longitude,
                 "per_page": "21",
                 "page": Int(randomPage),
                 "format": "json",
@@ -71,8 +99,6 @@ class FlickrDownloadManager {
                             return
                     }
                     
-                    print ("Search results returned, about to pass back URL")
-                    print ("URL: \(photo[0]["url_m"]!)")
                     completion(photo, nil)
                 }
             
@@ -90,15 +116,15 @@ class FlickrDownloadManager {
      an error to the caller
      
      */
-    private static func getNumPagesForCoordinate(coordinate : CLLocationCoordinate2D, completion: (Int?, NSError?) -> Void){
+    private static func getNumPagesForCoordinates(latitude: Double, longitude: Double, completion: (Int?, NSError?) -> Void){
         
         Alamofire.request(
             .GET,
             "https://api.flickr.com/services/rest/",
             parameters: ["method": "flickr.photos.search",
                 "api_key": "a4ebce9cbae74391014b23471293fb42",
-                "lat": coordinate.latitude,
-                "lon": coordinate.longitude,
+                "lat": latitude,
+                "lon": longitude,
                 "per_page": "21",
                 "format": "json",
                 "nojsoncallback": "1",
@@ -133,11 +159,6 @@ class FlickrDownloadManager {
         - completion: The completion handler to call after an image has been downloaded
      */
      static func downloadImageWithUrl(url: String, completion: (NSData?, NSError?) -> Void){
-//        let farm = parameters["farm"]
-//        let server = parameters["server"]
-//        let id = parameters["id"]
-//        let secret = parameters["secret"]
-//        let url = "https://farm\(farm!).staticflickr.com/\(server!)/\(id!)_\(secret!)_m.jpg"
         
         
         print ("URL: \(url)")
@@ -152,7 +173,21 @@ class FlickrDownloadManager {
             
         }
     }
-
+    
+    static func downloadImagesForPhotos(photos: [Photo]){
+        for photo in photos {
+            let p = photo as! Photo
+            downloadImageWithUrl(p.url!){ data, error in
+                
+                if let data = data {
+                    p.imageData = data
+                    p.local = true
+                    self.stack.save()
+                }
+                
+            }
+        }
+    }
 
 
 }

@@ -21,7 +21,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     var longitude: CLLocationDegrees?
     
     lazy var sharedContext: NSManagedObjectContext = {
-        // Get the stack
         let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
         let stack = delegate.stack
         return stack.context
@@ -57,8 +56,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         // Initialize Fetch Request
         let pinFetchRequest = NSFetchRequest(entityName: "Pin")
         
-        // Only fetch Pins associated with the coordinate that this PhotoAlbumViewController is 
-        
+        // Find the Pin associated with this coordinate
         let format = "latitude BETWEEN {\(self.latitude! - 0.0001), \(self.latitude! + 0.0001)} AND longitude BETWEEN {\(self.longitude! - 0.0001), \(self.longitude! + 0.0001)} "
         pinFetchRequest.predicate = NSPredicate(format: format)
         
@@ -80,7 +78,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         setMapRegion()
         addPinToMapForAlbumCoordinates()
         preparePhotoObjects()
-        
     }
     
     /**
@@ -100,7 +97,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         
         // If no Photo objects are associated with this Pin, query Flickr for relevant images
         if (fetchedResultsController.fetchedObjects?.count == 0){
-            downloadImageURLsFromFlickr()
+            downloadImagesFromFlickr()
         }
     }
     
@@ -108,63 +105,27 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
      Downloads image URLs from Flickr and -- for each URL -- creates Photo objects with a placeholder 
      image
      */
-    func downloadImageURLsFromFlickr(){
+    func downloadImagesFromFlickr(){
         newCollectionButton.enabled = false
         feedbackLabel.text = "Searching Flickr..."
         feedbackLabel.hidden = false
-        FlickrDownloadManager.downloadImagesForCoordinate(CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)){ photoData, error in
+        FlickrDownloadManager.downloadImagesForPinAndSaveInContext(pin, context: self.sharedContext){ error in
             
-            if let photoData = photoData {
-                for photo in photoData {
-                    if let url = photo["url_m"] as? String,
-                    let dateTaken = photo["datetaken"] as? String {
-                        let dateFormatter = NSDateFormatter()
-                        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                        let date = dateFormatter.dateFromString(dateTaken)
-                        Photo(pin: self.pin, date: date, url: url, context: self.sharedContext)
-                    }
-                }
-                self.stack.save()
-                self.feedbackLabel.hidden = true
-            } else {
+            if let error = error {
                 self.feedbackLabel.text = "Network Error"
                 self.feedbackLabel.hidden = false
+                print (error)
+            } else {
+                self.feedbackLabel.hidden = true
+                FlickrDownloadManager.downloadImagesForPhotos(self.fetchedResultsController.fetchedObjects as! [Photo])
             }
             
             // If there are no photos associated with this location, show the noImagesLabel
-            if photoData?.count == 0 {
+            if self.fetchedResultsController.fetchedObjects?.count == 0 {
                 self.feedbackLabel.text = "No Images"
                 self.feedbackLabel.hidden = false
             }
-            
-            self.downloadImagesFromFlickr(){
-                print ("Downloaded images")
-            }
         }
-        
-
-        
-    }
-    
-    func downloadImagesFromFlickr(completion: () -> ()){
-        
-        
-        for photo in fetchedResultsController.fetchedObjects! {
-            print ("HERE!!!")
-            let p = photo as! Photo
-            FlickrDownloadManager.downloadImageWithUrl(p.url!){ data, error in
-                
-                if let data = data {
-                    p.imageData = data
-                    p.local = true
-                    self.stack.save()
-                }
-                
-            }
-        
-        }
-        completion()
-        
     }
     
     @IBAction func newCollection(sender: UIBarButtonItem) {
@@ -174,11 +135,10 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         stack.save()
         
         feedbackLabel.hidden = true
-        downloadImageURLsFromFlickr()
+        downloadImagesFromFlickr()
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
         return fetchedResultsController.fetchedObjects!.count
     }
     
@@ -198,10 +158,16 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         return cell
     }
     
-    func downloading(photos: [Photo]) -> Bool {
-        var retVal = false
+    /**
+     Determine if the photos for this photo album is in a downloading state
+     
+     - Returns: true if all of the Photos have been downloaded; false otherwise
+     */
+    func finishedDownloading() -> Bool {
+        let photos = fetchedResultsController.fetchedObjects as! [Photo]
+        var retVal = true
         for photo in photos{
-            retVal = retVal || !photo.local
+            retVal = retVal && photo.local
         }
         return retVal
     }
@@ -209,7 +175,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         print("Called controllerDidChangeContent")
         collectionView.reloadData()
-        if !downloading(controller.fetchedObjects as! [Photo]) {
+        if finishedDownloading() {
             self.newCollectionButton.enabled = true
         }
     }
