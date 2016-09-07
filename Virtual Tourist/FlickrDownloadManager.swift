@@ -23,8 +23,18 @@ class FlickrDownloadManager {
     static func downloadImagesForPinAndSaveInContext(pin: Pin, context: NSManagedObjectContext, completion: (NSError?) -> Void){
         
         downloadImagesForCoordinates(Double(pin.latitude!), longitude: Double(pin.longitude!)) { photoData, error in
-            if let photoData = photoData {
-                for photo in photoData {
+            
+            
+            if let error = error {
+                completion(error)
+            }
+            else if photoData?.count == 0 {
+                let noPhotosError = NSError(domain: "No images", code: -1, userInfo: nil)
+                print (noPhotosError)
+                completion(noPhotosError)
+            }
+            else {
+                for photo in photoData! {
                     if let url = photo["url_m"] as? String,
                         let dateTaken = photo["datetaken"] as? String {
                         let dateFormatter = NSDateFormatter()
@@ -36,7 +46,7 @@ class FlickrDownloadManager {
                 self.stack.save()
                 completion(nil)
             }
-            completion(error)
+            
         }
         
     
@@ -70,8 +80,6 @@ class FlickrDownloadManager {
     private static func downloadImagesForCoordinates(latitude: Double, longitude: Double, completion: ([[String:AnyObject]]?, NSError?) -> Void){
         
         getNumPagesForCoordinates(latitude, longitude: longitude){ pages, error in
-            
-            print("Got number of pages")
             
             guard let pages = pages else {
                 completion(nil, error)
