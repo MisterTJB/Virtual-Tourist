@@ -102,6 +102,11 @@ class FlickrDownloadManager {
         
         getNumPagesForCoordinates(latitude, longitude: longitude){ pages, error in
             
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+            
             guard let pages = pages else {
                 completion(nil, error)
                 return
