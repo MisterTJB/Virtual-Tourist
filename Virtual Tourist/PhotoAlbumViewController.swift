@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import MapKit
 
-class PhotoAlbumViewController : UIViewController, UICollectionViewDelegate, NSFetchedResultsControllerDelegate {
+class PhotoAlbumViewController : UIViewController, NSFetchedResultsControllerDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet var feedbackLabel: UILabel!
@@ -138,25 +138,7 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDelegate, NSF
         downloadImagesFromFlickr()
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return fetchedResultsController.fetchedObjects!.count
-    }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCell", forIndexPath: indexPath)
-        
-        if let photo = fetchedResultsController.fetchedObjects?[indexPath.item] as? Photo {
-            
-            if let image = UIImage(data: photo.imageData!) {
-                let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: cell.bounds.width, height: cell.bounds.height))
-                imageView.image = image
-                imageView.contentMode = .ScaleAspectFill
-                cell.addSubview(imageView)
-            }
-            
-        }
-        return cell
-    }
     
     /**
      Determine if the photos for this photo album is in a downloading state
@@ -170,19 +152,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDelegate, NSF
             retVal = retVal && photo.local
         }
         return retVal
-    }
-    
-    
-    
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        print ("Trying to delete Photo with index \(indexPath.item)")
-        if let photoToDelete = fetchedResultsController.fetchedObjects?[indexPath.item] as? Photo {
-            sharedContext.deleteObject(photoToDelete)
-            stack.save()
-            print ("Deleted photo at index \(indexPath.item)")
-        }
-        
-        
     }
     
     /**
@@ -229,6 +198,40 @@ extension PhotoAlbumViewController: UICollectionViewDataSource {
         if finishedDownloading() {
             self.newCollectionButton.enabled = true
         }
+    }
+
+}
+
+// MARK: Manage the display of images in the UICollectionView
+
+extension PhotoAlbumViewController: UICollectionViewDelegate {
+
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        if let photoToDelete = fetchedResultsController.fetchedObjects?[indexPath.item] as? Photo {
+            sharedContext.deleteObject(photoToDelete)
+            stack.save()
+        }
+    }
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return fetchedResultsController.fetchedObjects!.count
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCell", forIndexPath: indexPath)
+        
+        if let photo = fetchedResultsController.fetchedObjects?[indexPath.item] as? Photo {
+            
+            // Add the Photo's image data to the cell
+            if let image = UIImage(data: photo.imageData!) {
+                let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: cell.bounds.width, height: cell.bounds.height))
+                imageView.image = image
+                imageView.contentMode = .ScaleAspectFill
+                cell.addSubview(imageView)
+            }
+            
+        }
+        return cell
     }
 
 }
