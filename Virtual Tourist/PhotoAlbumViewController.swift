@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import MapKit
 
-class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate, UICollectionViewDelegateFlowLayout {
+class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet var feedbackLabel: UILabel!
@@ -180,11 +180,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         }
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        let width = (collectionView.frame.width - 20) / 3
-        return CGSize(width: width, height: width)
-    }
-    
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         print ("Trying to delete Photo with index \(indexPath.item)")
@@ -220,6 +215,15 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         pin.coordinate = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
         mapView.addAnnotation(pin)
         
+    }
+
+}
+
+extension PhotoAlbumViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        let width = (collectionView.frame.width - 20) / 3
+        return CGSize(width: width, height: width)
     }
 
 }
