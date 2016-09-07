@@ -76,12 +76,11 @@ class FlickrDownloadManager {
      */
     static func downloadImagesForPhotos(photos: [Photo]){
         for photo in photos {
-            let p = photo as! Photo
-            downloadImageWithUrl(p.url!){ data, error in
+            downloadImageWithUrl(photo.url!){ data, error in
                 
                 if let data = data {
-                    p.imageData = data
-                    p.local = true
+                    photo.imageData = data
+                    photo.local = true
                     self.stack.save()
                 }
                 
@@ -190,7 +189,7 @@ class FlickrDownloadManager {
                 }
                 
                 print ("Search result will return \(photos["pages"]) results")
-                completion(photos["pages"] as! Int, nil)
+                completion(photos["pages"] as? Int, nil)
         }
     
     }
