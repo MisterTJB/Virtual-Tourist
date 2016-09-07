@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import MapKit
 
-class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate {
+class PhotoAlbumViewController : UIViewController, UICollectionViewDelegate, NSFetchedResultsControllerDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet var feedbackLabel: UILabel!
@@ -172,13 +172,6 @@ class PhotoAlbumViewController : UIViewController, UICollectionViewDataSource, U
         return retVal
     }
     
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        print("Called controllerDidChangeContent")
-        collectionView.reloadData()
-        if finishedDownloading() {
-            self.newCollectionButton.enabled = true
-        }
-    }
     
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
@@ -224,6 +217,18 @@ extension PhotoAlbumViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         let width = (collectionView.frame.width - 20) / 3
         return CGSize(width: width, height: width)
+    }
+
+}
+
+extension PhotoAlbumViewController: UICollectionViewDataSource {
+    
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        print("Called controllerDidChangeContent")
+        collectionView.reloadData()
+        if finishedDownloading() {
+            self.newCollectionButton.enabled = true
+        }
     }
 
 }
