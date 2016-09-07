@@ -106,9 +106,14 @@ class PhotoAlbumViewController : UIViewController, NSFetchedResultsControllerDel
      image
      */
     func downloadImagesFromFlickr(){
+        
+        // Disable the New Collection button and update the feedback label to 
+        // indicate that images are being sourced
         newCollectionButton.enabled = false
         feedbackLabel.text = "Searching Flickr..."
         feedbackLabel.hidden = false
+        
+        // Initiate the download from Flickr
         FlickrDownloadManager.downloadImagesForPinAndSaveInContext(pin, context: self.sharedContext){ error in
             
             if let error = error {
@@ -128,13 +133,14 @@ class PhotoAlbumViewController : UIViewController, NSFetchedResultsControllerDel
         }
     }
     
+    /**
+     Delete all Photos in this collection and initiate a new download from Flickr
+     */
     @IBAction func newCollection(sender: UIBarButtonItem) {
         for photo in fetchedResultsController.fetchedObjects! {
             sharedContext.deleteObject(photo as! Photo)
         }
         stack.save()
-        
-        feedbackLabel.hidden = true
         downloadImagesFromFlickr()
     }
     
@@ -181,6 +187,8 @@ class PhotoAlbumViewController : UIViewController, NSFetchedResultsControllerDel
 
 }
 
+// MARK: Enforce a n x 3 grid of identically-sized UICollectionView cells
+
 extension PhotoAlbumViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
@@ -190,10 +198,11 @@ extension PhotoAlbumViewController: UICollectionViewDelegateFlowLayout {
 
 }
 
+// MARK: Manage the updating of the collection view in response to changes in the datasource
+
 extension PhotoAlbumViewController: UICollectionViewDataSource {
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        print("Called controllerDidChangeContent")
         collectionView.reloadData()
         if finishedDownloading() {
             self.newCollectionButton.enabled = true
