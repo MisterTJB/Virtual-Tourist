@@ -117,18 +117,19 @@ class PhotoAlbumViewController : UIViewController, NSFetchedResultsControllerDel
         FlickrDownloadManager.downloadImagesForPinAndSaveInContext(pin, context: self.sharedContext){ error in
             
             if let error = error {
-                self.feedbackLabel.text = "Network Error"
-                self.feedbackLabel.hidden = false
+                
+                if (error.code == 0){
+                    self.feedbackLabel.text = "Network Error"
+                    self.feedbackLabel.hidden = false
+                    self.newCollectionButton.enabled = true
+                } else if (error.code == -1){
+                    self.feedbackLabel.text = "No Images"
+                    self.feedbackLabel.hidden = false
+                }
                 print (error)
             } else {
                 self.feedbackLabel.hidden = true
                 FlickrDownloadManager.downloadImagesForPhotos(self.fetchedResultsController.fetchedObjects as! [Photo])
-            }
-            
-            // If there are no photos associated with this location, show the noImagesLabel
-            if self.fetchedResultsController.fetchedObjects?.count == 0 {
-                self.feedbackLabel.text = "No Images"
-                self.feedbackLabel.hidden = false
             }
         }
     }
