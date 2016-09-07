@@ -20,6 +20,21 @@ class FlickrDownloadManager {
         return delegate.stack
     }()
     
+    /**
+     Create Photo objects for a given Pin in a given context.
+     
+     Searches Flickr for images whose coordinates
+     are similar to those of the Pin, and generates Photo objects for a random set of (at most) 21 images. 
+     Photo objects are saved in the passed in NSManagedObjectContext with a placeholder image.
+     
+     - Parameters: 
+        - pin: The Pin object that informs the geographic coordinate about which to search for images. New 
+                Photo objects will be associated with this pin
+        - context: The NSManagedObjectContext in which to save new Photo objects
+        - completion: The completion handler to call when all of the new Photos have been created. The error
+                        argument will be nil if new images were successfully retrieved. Check for code == 0 for
+                        network errors, and code == -1 for the case in which no images exist at that coordinate
+     */
     static func downloadImagesForPinAndSaveInContext(pin: Pin, context: NSManagedObjectContext, completion: (NSError?) -> Void){
         
         downloadImagesForCoordinates(Double(pin.latitude!), longitude: Double(pin.longitude!)) { photoData, error in
@@ -52,6 +67,13 @@ class FlickrDownloadManager {
     
     }
     
+    /**
+     Replace the image data stored in a Photo with the data stored at its Flickr URL and 
+     save the Photo object in CoreData
+     
+     - Parameters:
+        - photos: An array of Photo objects to update
+     */
     static func downloadImagesForPhotos(photos: [Photo]){
         for photo in photos {
             let p = photo as! Photo
